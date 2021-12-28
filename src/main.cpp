@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+#include "GameController.h"
+
 using namespace std;
 
 int main() {
@@ -20,10 +22,25 @@ int main() {
 
     if (dwResult == ERROR_SUCCESS)
     {
-        cout << "controller connected!\n";
-        dwResult = XInputGetState(CONTROLLER_INDEX, &state);
-        float bLTrigger = state.Gamepad.bLeftTrigger;
-        cout << "back left trigger: " + to_string(bLTrigger);
+        while (true) {
+            auto *gameController = new GameController(5000, CONTROLLER_INDEX);
+            gameController->updateControllerState();
+            int leftAnalog = gameController->getLeftAnalogState();
+            int rightAnalog = gameController->getRightAnalogState();
+            cout << "---------------" << endl;
+            cout << "left analog; angle: " + to_string(leftAnalog % (int) pow(2, 15)) +
+                    ", intensity: " + to_string((int) floor(leftAnalog / (int) pow(2, 15))) << endl;
+
+            cout << "right analog; angle: " + to_string(rightAnalog % (int) pow(2, 15)) +
+                    ", intensity: " + to_string((int) floor(rightAnalog / (int) pow(2, 15))) << endl;
+            Sleep(500);
+        }
+
+
+//        cout << "controller connected!\n";
+//        dwResult = XInputGetState(CONTROLLER_INDEX, &state);
+//        float bLTrigger = state.Gamepad.bLeftTrigger;
+//        cout << "back left trigger: " + to_string(bLTrigger);
 
 
     }
