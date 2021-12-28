@@ -6,7 +6,12 @@
 
 #include "GameController.h"
 
-GameController::GameController(short _deadZone, char _controllerIndex) : deadZone(_deadZone), controllerIndex(_controllerIndex) {}
+#include <string>
+#include <iostream>
+using namespace std;
+
+GameController::GameController(char _controllerIndex, short _analogDeadZone, BYTE _triggerDeadZone) :
+    controllerIndex(_controllerIndex), analogDeadZone(_analogDeadZone), triggerDeadZone(_triggerDeadZone) {}
 
 void GameController::updateControllerState() {
     DWORD dwResult;
@@ -14,8 +19,8 @@ void GameController::updateControllerState() {
     ZeroMemory(&state, sizeof(XINPUT_STATE));
     dwResult = XInputGetState(controllerIndex, &state);
 
-    bLeftTrigger = state.Gamepad.bLeftTrigger;
-    bRightTrigger = state.Gamepad.bRightTrigger;
+    leftTrigger = state.Gamepad.bLeftTrigger;
+    rightTrigger = state.Gamepad.bRightTrigger;
 
     leftX = state.Gamepad.sThumbLX;
     leftY = state.Gamepad.sThumbLY;
@@ -25,20 +30,20 @@ void GameController::updateControllerState() {
     buttons = state.Gamepad.wButtons;
 }
 
-unsigned int GameController::getLeftAnalogState() {
-    return toBitmap(leftX, leftY);
+unsigned short GameController::getButtonStates() const {
+    return buttons;
 }
 
-unsigned int GameController::getRightAnalogState() {
-    return toBitmap(rightX, rightY);
+unsigned int GameController::getLeftAnalogState() const {
+    return toBitmask(leftX, leftY);
 }
 
+unsigned int GameController::getRightAnalogState() const {
+    return toBitmask(rightX, rightY);
+}
 
-unsigned int GameController::toBitmap(short X, short Y) const {
-    if (abs(X) < deadZone && abs(Y) < deadZone) return 0;
-
-    //X = abs(X) < deadZone ? 0 : X;
-    //Y = abs(Y) < deadZone ? 0 : Y;
+unsigned int GameController::toBitmask(short X, short Y) const {
+    if (abs(X) < analogDeadZone && abs(Y) < analogDeadZone) return 0;
 
     // Clockwise angle (0° at 12 o'clock)
     unsigned short angleRounded;
@@ -55,8 +60,16 @@ unsigned int GameController::toBitmap(short X, short Y) const {
     unsigned short intensity = (unsigned short) round(sqrt(X * X + Y * Y));
 
     // Map 2 shorts into int
-    unsigned int bitmap = intensity * pow(2, 15) + angleRounded;
-    return bitmap;
+    unsigned int bitmask = intensity * pow(2, 15) + angleRounded;
+    return bitmask;
+}
+
+BYTE GameController::getLeftTriggerState() const {
+    return leftTrigger;
+}
+
+BYTE GameController::getRightTriggerState() const {
+    return rightTrigger;
 }
 
 
