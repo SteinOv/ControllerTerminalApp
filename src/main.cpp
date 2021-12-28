@@ -58,14 +58,14 @@ int main()
 
             if (leftAnalog > 0)
             {
-                cout << "left analog; angle: " + to_string(leftAnalog % (int) pow(2, 15)) +
-                        ", intensity: " + to_string((int) floor(leftAnalog / (int) pow(2, 15))) << endl;
+                cout << "left analog; angle: " + to_string(leftAnalog & 0xFFFF) +
+                        ", intensity: " + to_string(leftAnalog >> 16) << endl;
                 printedAnything = true;
             }
             if (rightAnalog > 0)
             {
-                cout << "right analog; angle: " + to_string(rightAnalog % (int) pow(2, 15)) +
-                        ", intensity: " + to_string((int) floor(rightAnalog / (int) pow(2, 15))) << endl;
+                cout << "right analog; angle: " + to_string(rightAnalog & 0xFFFF) +
+                        ", intensity: " + to_string(rightAnalog >> 16) << endl;
                 printedAnything = true;
             }
             if (leftTrigger > 0)

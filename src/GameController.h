@@ -36,8 +36,8 @@ public:
      * The highest possible value depends on the controller, it will be around 40000 and never above 46341.
      * <p>
      * @see GameController#updateControllerState: Will retrieve state at time of last call to this method
-     * @return A bitmask containing the angle and intensity of the analog stick. The first two bytes represent the angle
-     * and the last two bytes the intensity.
+     * @return A bitmask containing the angle and intensity of the analog stick. The first two bytes (0x____FFFF) represent the angle
+     * and the last two bytes (0xFFFF____) the intensity.
      */
     unsigned int getLeftAnalogState() const;
 
@@ -47,8 +47,8 @@ public:
      * The highest possible value depends on the controller, it will be around 40000 and never above 46341.
      * <p>
      * @see GameController#updateControllerState: Will retrieve state at time of last call to this method
-     * @return A bitmask containing the angle and intensity of the analog stick. The first two bytes represent the angle
-     * and the last two bytes the intensity.
+     * @return A bitmask containing the angle and intensity of the analog stick. The first two bytes (0x____FFFF) represent the angle
+     * and the last two bytes (0xFFFF____) the intensity.
      */
     unsigned int getRightAnalogState() const;
 

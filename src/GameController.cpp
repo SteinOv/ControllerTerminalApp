@@ -56,11 +56,10 @@ unsigned int GameController::toBitmask(short X, short Y) const {
         angleRounded = X < 0 ? 270 : 90;
     }
 
-    // Intensity normalized from 0 to sizeof(BYTE) (
     unsigned short intensity = (unsigned short) round(sqrt(X * X + Y * Y));
 
-    // Map 2 shorts into int
-    unsigned int bitmask = intensity * pow(2, 15) + angleRounded;
+    // Mask 2 shorts into an int
+    unsigned int bitmask = (intensity << 16) + angleRounded;
     return bitmask;
 }
 
